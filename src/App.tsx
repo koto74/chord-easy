@@ -37,15 +37,8 @@ const ChordSampler = () => {
 
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
-      <Grid container justifyContent="center" alignItems="center" spacing={2} style={{ maxWidth: '600px', margin: '0 auto', flexWrap: 'wrap' }}>
-        {chords.map((chord, index) => (
-          <Grid item key={index}>
-            <ChordButton variant="contained" color="primary" onClick={() => playChord(chord)}>
-              {chord}
-            </ChordButton>
-          </Grid>
-        ))}
-        <FormControl variant="filled" style={{ minWidth: 120, margin: '20px' }}>
+      <Grid container justifyContent="center" alignItems="center" style={{ margin: '20px 0' }}>
+        <FormControl variant="filled" style={{ minWidth: 120 }}>
           <InputLabel id="chord-select-label">Chord</InputLabel>
           <Select
             labelId="chord-select-label"
@@ -59,14 +52,21 @@ const ChordSampler = () => {
             ))}
           </Select>
         </FormControl>
-      </Grid>
-      <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
         <IconButton onClick={addChord} color="primary" disabled={!selectedChord || chords.includes(selectedChord)}>
           <AddCircleOutlineIcon />
         </IconButton>
         <IconButton onClick={() => setChords(chords.slice(0, chords.length - 1))} color="secondary">
           <RemoveCircleOutlineIcon />
         </IconButton>
+      </Grid>
+      <Grid container justifyContent="center" alignItems="center" spacing={2} style={{ maxWidth: '600px', margin: '0 auto', flexWrap: 'wrap' }}>
+        {chords.map((chord, index) => (
+          <Grid item key={index}>
+            <ChordButton variant="contained" color="primary" onClick={() => playChord(chord)}>
+              {chord}
+            </ChordButton>
+          </Grid>
+        ))}
       </Grid>
     </div>
   );
