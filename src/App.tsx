@@ -14,7 +14,13 @@ const ChordButton = styled(Button)({
 const ChordSampler = () => {
   const [chords, setChords] = useState(['C Major', 'G7']);
   const [selectedChord, setSelectedChord] = useState('');
-  const availableChords = ['C Major', 'G7', 'D Minor', 'A Minor', 'E Major'];
+  const availableChords = [
+    'C Major', 'G7', 'D Minor', 'A Minor', 'E Major', 
+    'F Major', 'B7', 'E Minor', 'A Major', 'D7', 
+    'G Major', 'C7', 'F# Minor', 'B Minor', 'F#7', 
+    'B Major', 'E7', 'A7', 'D Major', 'G# Minor',
+    'C# Minor', 'F Minor', 'C# Major', 'G#7', 'Eb Major'
+  ];
 
   const playChord = (chord: string) => {
     console.log(`Playing ${chord}`);
