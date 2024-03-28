@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Grid, IconButton } from '@mui/material';
+import { Button, Grid, IconButton, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/material/styles';
+import { SelectChangeEvent } from '@mui/material';
 
 const ChordButton = styled(Button)({
   height: '100px',
@@ -10,24 +11,29 @@ const ChordButton = styled(Button)({
   margin: '10px',
 });
 
-const App = () => {
+const ChordSampler = () => {
   const [chords, setChords] = useState(['C Major', 'G7']);
+  const [selectedChord, setSelectedChord] = useState('');
+  const availableChords = ['C Major', 'G7', 'D Minor', 'A Minor', 'E Major'];
 
   const playChord = (chord: string) => {
     console.log(`Playing ${chord}`);
-    // ここに実際の和音を鳴らすロジックを追加します。
+    // 実際の和音を鳴らすロジックをここに追加
+  };
+
+  const handleChordChange = (event: SelectChangeEvent<string>) => {
+    setSelectedChord(event.target.value as string);
   };
 
   const addChord = () => {
-    const newChord = `New Chord ${chords.length + 1}`; // 実際にはユーザー入力から取得するか、適切なロジックを使用して生成します。
-    setChords([...chords, newChord]);
-  };
-
-  const removeChord = () => {
-    if (chords.length > 0) {
-      setChords(chords.slice(0, chords.length - 1));
+    if (selectedChord && !chords.includes(selectedChord)) {
+      setChords([...chords, selectedChord]);
+      setSelectedChord('');
     }
   };
+
+  // 既に選択されたコードを除外したコードのリストを取得
+  const filteredAvailableChords = availableChords.filter(chord => !chords.includes(chord));
 
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
@@ -39,12 +45,26 @@ const App = () => {
             </ChordButton>
           </Grid>
         ))}
+        <FormControl variant="filled" style={{ minWidth: 120, margin: '20px' }}>
+          <InputLabel id="chord-select-label">Chord</InputLabel>
+          <Select
+            labelId="chord-select-label"
+            value={selectedChord}
+            onChange={handleChordChange}
+          >
+            {filteredAvailableChords.map((chord, index) => (
+              <MenuItem key={index} value={chord}>
+                {chord}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Grid>
       <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '20px' }}>
-        <IconButton onClick={addChord} color="primary">
+        <IconButton onClick={addChord} color="primary" disabled={!selectedChord || chords.includes(selectedChord)}>
           <AddCircleOutlineIcon />
         </IconButton>
-        <IconButton onClick={removeChord} color="secondary">
+        <IconButton onClick={() => setChords(chords.slice(0, chords.length - 1))} color="secondary">
           <RemoveCircleOutlineIcon />
         </IconButton>
       </Grid>
@@ -52,4 +72,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default ChordSampler;
