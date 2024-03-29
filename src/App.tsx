@@ -5,22 +5,67 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/material/styles';
 import { SelectChangeEvent } from '@mui/material';
 
-const ChordButton = styled(Button)({
+const getButtonColor = (role: string) => {
+  switch(role) {
+    case 'Tonic':
+      return 'primary';
+    case 'Subdominant':
+      return 'secondary';
+    case 'Dominant':
+      return 'success';
+    default:
+      return 'primary';
+  }
+};
+
+const availableChords = [
+  { name: 'C Major', role: 'Tonic' },
+  { name: 'F Major', role: 'Subdominant' },
+  { name: 'G Major', role: 'Dominant' },
+  { name: 'A Minor', role: 'Tonic' },
+  { name: 'D Minor', role: 'Subdominant' },
+  { name: 'E Minor', role: 'Dominant' },
+  { name: 'Bb Major', role: 'Subdominant' },
+  { name: 'C7', role: 'Dominant' },
+  { name: 'F# Minor', role: 'Tonic' },
+  { name: 'B Minor', role: 'Subdominant' },
+  { name: 'E Major', role: 'Dominant' },
+  { name: 'A7', role: 'Dominant' },
+  { name: 'D7', role: 'Dominant' },
+  { name: 'G7', role: 'Dominant' },
+  { name: 'C# Minor', role: 'Tonic' },
+  { name: 'F# Major', role: 'Subdominant' },
+  { name: 'B Major', role: 'Dominant' },
+  { name: 'E7', role: 'Dominant' },
+  { name: 'A Major', role: 'Subdominant' },
+  { name: 'D Major', role: 'Tonic' },
+  { name: 'G Minor', role: 'Subdominant' },
+  { name: 'C Minor', role: 'Tonic' },
+  { name: 'F Minor', role: 'Subdominant' },
+  { name: 'Bb7', role: 'Dominant' },
+  { name: 'Eb Major', role: 'Subdominant' },
+  { name: 'Ab Major', role: 'Tonic' },
+  { name: 'Db Major', role: 'Subdominant' },
+  { name: 'Gb Major', role: 'Dominant' },
+  { name: 'B7', role: 'Dominant' },
+  { name: 'E Minor', role: 'Tonic' },
+  { name: 'A Minor', role: 'Subdominant' },
+  { name: 'D Minor', role: 'Dominant' },
+];
+
+const ChordButton = styled(Button)(({ theme, role }) => ({
   height: '100px',
   width: '100px',
   margin: '10px',
-});
+  backgroundColor: theme.palette[getButtonColor(role)].main,
+  '&:hover': {
+    backgroundColor: theme.palette[getButtonColor(role)].dark,
+  },
+}));
 
 const ChordSampler = () => {
-  const [chords, setChords] = useState(['C Major', 'G7']);
+  const [chords, setChords] = useState([{ name: 'C Major', role: 'Tonic' }, { name: 'G Major', role: 'Dominant' }]);
   const [selectedChord, setSelectedChord] = useState('');
-  const availableChords = [
-    'C Major', 'G7', 'D Minor', 'A Minor', 'E Major', 
-    'F Major', 'B7', 'E Minor', 'A Major', 'D7', 
-    'G Major', 'C7', 'F# Minor', 'B Minor', 'F#7', 
-    'B Major', 'E7', 'A7', 'D Major', 'G# Minor',
-    'C# Minor', 'F Minor', 'C# Major', 'G#7', 'Eb Major'
-  ];
 
   const playChord = (chord: string) => {
     console.log(`Playing ${chord}`);
@@ -32,14 +77,14 @@ const ChordSampler = () => {
   };
 
   const addChord = () => {
-    if (selectedChord && !chords.includes(selectedChord)) {
-      setChords([...chords, selectedChord]);
+    const chordToAdd = availableChords.find(chord => chord.name === selectedChord);
+    if (chordToAdd && !chords.some(chord => chord.name === chordToAdd.name)) {
+      setChords([...chords, chordToAdd]);
       setSelectedChord('');
     }
   };
 
-  // 既に選択されたコードを除外したコードのリストを取得
-  const filteredAvailableChords = availableChords.filter(chord => !chords.includes(chord));
+  const filteredAvailableChords = availableChords.filter(chord => !chords.some(c => c.name === chord.name));
 
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
@@ -52,13 +97,13 @@ const ChordSampler = () => {
             onChange={handleChordChange}
           >
             {filteredAvailableChords.map((chord, index) => (
-              <MenuItem key={index} value={chord}>
-                {chord}
+              <MenuItem key={index} value={chord.name}>
+                {chord.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <IconButton onClick={addChord} color="primary" disabled={!selectedChord || chords.includes(selectedChord)}>
+        <IconButton onClick={addChord} color="primary" disabled={!selectedChord || chords.some(chord => chord.name === selectedChord)}>
           <AddCircleOutlineIcon />
         </IconButton>
         <IconButton onClick={() => setChords(chords.slice(0, chords.length - 1))} color="secondary">
@@ -68,8 +113,11 @@ const ChordSampler = () => {
       <Grid container justifyContent="center" alignItems="center" spacing={2} style={{ maxWidth: '600px', margin: '0 auto', flexWrap: 'wrap' }}>
         {chords.map((chord, index) => (
           <Grid item key={index}>
-            <ChordButton variant="contained" color="primary" onClick={() => playChord(chord)}>
-              {chord}
+            <ChordButton
+              variant="contained"
+              role={chord.role}
+              onClick={() => playChord(chord.name)}>
+              {chord.name}
             </ChordButton>
           </Grid>
         ))}
