@@ -53,7 +53,11 @@ const availableChords = [
   { name: 'D Minor', role: 'Dominant' },
 ];
 
-const ChordButton = styled(Button)(({ theme, role }) => ({
+type ChordButtonProps = {
+  role: string;
+};
+
+const ChordButton = styled(Button)<ChordButtonProps>(({ theme, role }) => ({
   height: '100px',
   width: '100px',
   margin: '10px',
