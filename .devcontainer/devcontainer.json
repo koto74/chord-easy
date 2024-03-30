@@ -1,6 +1,6 @@
 {
-    "service": "react-vite-sample",
-    "dockerComposeFile": "../docker-compose.yml",
+    "service": "chord-sampler",
+    "dockerComposeFile": "../compose.yaml",
     "workspaceFolder": "/workdir",
     "customizations": {
       "vscode": {
