@@ -4,6 +4,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/material/styles';
 import { SelectChangeEvent } from '@mui/material';
+import * as Tone from 'tone';
+import chordData from './data/sound.json'
 
 const getButtonColor = (role: string) => {
   switch(role) {
@@ -17,41 +19,6 @@ const getButtonColor = (role: string) => {
       return 'primary';
   }
 };
-
-const availableChords = [
-  { name: 'C Major', role: 'Tonic' },
-  { name: 'F Major', role: 'Subdominant' },
-  { name: 'G Major', role: 'Dominant' },
-  { name: 'A Minor', role: 'Tonic' },
-  { name: 'D Minor', role: 'Subdominant' },
-  { name: 'E Minor', role: 'Dominant' },
-  { name: 'Bb Major', role: 'Subdominant' },
-  { name: 'C7', role: 'Dominant' },
-  { name: 'F# Minor', role: 'Tonic' },
-  { name: 'B Minor', role: 'Subdominant' },
-  { name: 'E Major', role: 'Dominant' },
-  { name: 'A7', role: 'Dominant' },
-  { name: 'D7', role: 'Dominant' },
-  { name: 'G7', role: 'Dominant' },
-  { name: 'C# Minor', role: 'Tonic' },
-  { name: 'F# Major', role: 'Subdominant' },
-  { name: 'B Major', role: 'Dominant' },
-  { name: 'E7', role: 'Dominant' },
-  { name: 'A Major', role: 'Subdominant' },
-  { name: 'D Major', role: 'Tonic' },
-  { name: 'G Minor', role: 'Subdominant' },
-  { name: 'C Minor', role: 'Tonic' },
-  { name: 'F Minor', role: 'Subdominant' },
-  { name: 'Bb7', role: 'Dominant' },
-  { name: 'Eb Major', role: 'Subdominant' },
-  { name: 'Ab Major', role: 'Tonic' },
-  { name: 'Db Major', role: 'Subdominant' },
-  { name: 'Gb Major', role: 'Dominant' },
-  { name: 'B7', role: 'Dominant' },
-  { name: 'E Minor', role: 'Tonic' },
-  { name: 'A Minor', role: 'Subdominant' },
-  { name: 'D Minor', role: 'Dominant' },
-];
 
 type ChordButtonProps = {
   role: string;
@@ -67,28 +34,33 @@ const ChordButton = styled(Button)<ChordButtonProps>(({ theme, role }) => ({
   },
 }));
 
+const synth = new Tone.PolySynth().toDestination();
+
 const ChordSampler = () => {
-  const [chords, setChords] = useState([{ name: 'C Major', role: 'Tonic' }, { name: 'G Major', role: 'Dominant' }]);
+  const [chords, setChords] = useState(chordData.availableChords.slice(0, 2)); // 初期状態の設定
   const [selectedChord, setSelectedChord] = useState('');
 
-  const playChord = (chord: string) => {
-    console.log(`Playing ${chord}`);
-    // 実際の和音を鳴らすロジックをここに追加
+  const playChord = (chordName: string) => {
+    const chordNotes = chordData.chords.find(chord => chord.name === chordName)?.chords;
+    if (chordNotes) {
+      console.log(`Playing ${chordName}`);
+      synth.triggerAttackRelease(chordNotes, '4n');
+    }
   };
 
   const handleChordChange = (event: SelectChangeEvent<string>) => {
-    setSelectedChord(event.target.value as string);
+    setSelectedChord(event.target.value);
   };
 
   const addChord = () => {
-    const chordToAdd = availableChords.find(chord => chord.name === selectedChord);
+    const chordToAdd = chordData.availableChords.find(chord => chord.name === selectedChord);
     if (chordToAdd && !chords.some(chord => chord.name === chordToAdd.name)) {
       setChords([...chords, chordToAdd]);
       setSelectedChord('');
     }
   };
 
-  const filteredAvailableChords = availableChords.filter(chord => !chords.some(c => c.name === chord.name));
+  const filteredAvailableChords = chordData.availableChords.filter(chord => !chords.some(c => c.name === chord.name));
 
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
@@ -102,7 +74,7 @@ const ChordSampler = () => {
           >
             {filteredAvailableChords.map((chord, index) => (
               <MenuItem key={index} value={chord.name}>
-                {chord.name}
+                {chord.name.replace(/_/g, ' ')}
               </MenuItem>
             ))}
           </Select>
@@ -121,7 +93,7 @@ const ChordSampler = () => {
               variant="contained"
               role={chord.role}
               onClick={() => playChord(chord.name)}>
-              {chord.name}
+              {chord.name.replace(/_/g, ' ')}
             </ChordButton>
           </Grid>
         ))}
