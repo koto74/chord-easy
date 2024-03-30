@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# Chord Sampler
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
 
-Currently, two official plugins are available:
+### Chord Playback
+The user can listen to a given chord with a single click.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Add and remove chords
+Users can select chords from a list of available chords to add to the sampler or remove chords from the sampler when they are no longer needed.
 
-## Expanding the ESLint configuration
+### Color-coding by role
+Chord buttons are color-coded according to their tonic, subdominant, and dominant roles, making it easy to visually understand the function of chords.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## Technologies
+- React
+- MUI
+- Tone.js
+- TypeScript
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Setup
+```
+yarn install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
