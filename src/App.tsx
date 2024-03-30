@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Button, Grid, IconButton, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Button, Grid, IconButton, Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { styled } from '@mui/material/styles';
-import { SelectChangeEvent } from '@mui/material';
 import * as Tone from 'tone';
-import chordData from './data/sound.json'
+import chordData from '@/data/sound.json';
 
 const getButtonColor = (role: string) => {
-  switch(role) {
+  switch (role) {
     case 'Tonic':
       return 'primary';
     case 'Subdominant':
@@ -43,7 +42,7 @@ const ChordSampler = () => {
 
   const playChord = (chordName: string) => {
     // コード名に対応する音を再生
-    const chordNotes = chordData.chords.find(chord => chord.name === chordName)?.chords;
+    const chordNotes = chordData.chords.find((chord) => chord.name === chordName)?.chords;
     if (chordNotes) {
       console.log(`Playing ${chordName}`);
       synth.triggerAttackRelease(chordNotes, '4n');
@@ -56,26 +55,24 @@ const ChordSampler = () => {
 
   const addChord = () => {
     // 選択されたコードが存在し、すでに選択されているコードに含まれていない場合に追加
-    const chordToAdd = chordData.availableChords.find(chord => chord.name === selectedChord);
-    if (chordToAdd && !chords.some(chord => chord.name === chordToAdd.name)) {
+    const chordToAdd = chordData.availableChords.find((chord) => chord.name === selectedChord);
+    if (chordToAdd && !chords.some((chord) => chord.name === chordToAdd.name)) {
       setChords([...chords, chordToAdd]);
       setSelectedChord('');
     }
   };
 
   // すでに選択されているコードを除いたコードを取得
-  const filteredAvailableChords = chordData.availableChords.filter(chord => !chords.some(c => c.name === chord.name));
+  const filteredAvailableChords = chordData.availableChords.filter(
+    (chord) => !chords.some((c) => c.name === chord.name),
+  );
 
   return (
     <div style={{ width: '100%', textAlign: 'center' }}>
       <Grid container justifyContent="center" alignItems="center" style={{ margin: '20px 0' }}>
         <FormControl variant="filled" style={{ minWidth: 120 }}>
           <InputLabel id="chord-select-label">Chord</InputLabel>
-          <Select
-            labelId="chord-select-label"
-            value={selectedChord}
-            onChange={handleChordChange}
-          >
+          <Select labelId="chord-select-label" value={selectedChord} onChange={handleChordChange}>
             {filteredAvailableChords.map((chord, index) => (
               <MenuItem key={index} value={chord.name}>
                 {chord.name.replace(/_/g, ' ')}
@@ -83,20 +80,27 @@ const ChordSampler = () => {
             ))}
           </Select>
         </FormControl>
-        <IconButton onClick={addChord} color="primary" disabled={!selectedChord || chords.some(chord => chord.name === selectedChord)}>
+        <IconButton
+          onClick={addChord}
+          color="primary"
+          disabled={!selectedChord || chords.some((chord) => chord.name === selectedChord)}
+        >
           <AddCircleOutlineIcon />
         </IconButton>
         <IconButton onClick={() => setChords(chords.slice(0, chords.length - 1))} color="secondary">
           <RemoveCircleOutlineIcon />
         </IconButton>
       </Grid>
-      <Grid container justifyContent="center" alignItems="center" spacing={2} style={{ maxWidth: '600px', margin: '0 auto', flexWrap: 'wrap' }}>
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+        style={{ maxWidth: '600px', margin: '0 auto', flexWrap: 'wrap' }}
+      >
         {chords.map((chord, index) => (
           <Grid item key={index}>
-            <ChordButton
-              variant="contained"
-              role={chord.role}
-              onClick={() => playChord(chord.name)}>
+            <ChordButton variant="contained" role={chord.role} onClick={() => playChord(chord.name)}>
               {chord.name.replace(/_/g, ' ')}
             </ChordButton>
           </Grid>
