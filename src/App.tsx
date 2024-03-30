@@ -24,6 +24,7 @@ type ChordButtonProps = {
   role: string;
 };
 
+// ボタンのスタイルを定義
 const ChordButton = styled(Button)<ChordButtonProps>(({ theme, role }) => ({
   height: '100px',
   width: '100px',
@@ -41,6 +42,7 @@ const ChordSampler = () => {
   const [selectedChord, setSelectedChord] = useState('');
 
   const playChord = (chordName: string) => {
+    // コード名に対応する音を再生
     const chordNotes = chordData.chords.find(chord => chord.name === chordName)?.chords;
     if (chordNotes) {
       console.log(`Playing ${chordName}`);
@@ -53,6 +55,7 @@ const ChordSampler = () => {
   };
 
   const addChord = () => {
+    // 選択されたコードが存在し、すでに選択されているコードに含まれていない場合に追加
     const chordToAdd = chordData.availableChords.find(chord => chord.name === selectedChord);
     if (chordToAdd && !chords.some(chord => chord.name === chordToAdd.name)) {
       setChords([...chords, chordToAdd]);
@@ -60,6 +63,7 @@ const ChordSampler = () => {
     }
   };
 
+  // すでに選択されているコードを除いたコードを取得
   const filteredAvailableChords = chordData.availableChords.filter(chord => !chords.some(c => c.name === chord.name));
 
   return (
