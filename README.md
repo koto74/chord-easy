@@ -1,4 +1,5 @@
 # Chord Sampler
+![image](https://github.com/koto74/chord-sampler/assets/124267041/aa7a9073-107b-4fcf-8d80-d579f11a9f94)
 
 ## Features
 
